@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete documentation for building AI automation workflows with n8n">
+    <title>Documentation | AI Automation with n8n</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .docs-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 3rem;
+            padding: 3rem 0;
+        }
+
+        .docs-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .docs-nav {
+            list-style: none;
+        }
+
+        .docs-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .docs-nav a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .docs-nav a:hover,
+        .docs-nav a.active {
+            background: var(--bg-light);
+            color: var(--primary-color);
+        }
+
+        .docs-content {
+            max-width: 900px;
+        }
+
+        .docs-content h2 {
+            font-size: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .docs-content h3 {
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .docs-content p {
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .docs-content ul, .docs-content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+        }
+
+        .docs-content li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .docs-content code {
+            background: var(--bg-light);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+        }
+
+        .docs-content pre {
+            background: var(--text-primary);
+            color: #10b981;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        .docs-content pre code {
+            background: none;
+            padding: 0;
+            color: #10b981;
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        @media (max-width: 768px) {
+            .docs-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .docs-sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-robot"></i>
+                <span>AI Automation</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/workflows">Workflows</a></li>
+                <li><a href="/documentation" class="active">Documentation</a></li>
+                <li><a href="/#contact" class="btn-primary">Get Started</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Documentation -->
+    <section class="features">
+        <div class="container">
+            <div class="docs-layout">
+                <!-- Sidebar -->
+                <aside class="docs-sidebar">
+                    <ul class="docs-nav">
+                        <li><a href="#introduction" class="active">Introduction</a></li>
+                        <li><a href="#installation">Installation</a></li>
+                        <li><a href="#core-concepts">Core Concepts</a></li>
+                        <li><a href="#building-workflows">Building Workflows</a></li>
+                        <li><a href="#ai-integration">AI Integration</a></li>
+                        <li><a href="#data-management">Data Management</a></li>
+                        <li><a href="#best-practices">Best Practices</a></li>
+                        <li><a href="#troubleshooting">Troubleshooting</a></li>
+                        <li><a href="#examples">Examples</a></li>
+                    </ul>
+                </aside>
+
+                <!-- Content -->
+                <div class="docs-content">
+                    <h1>AI Automation Documentation</h1>
+                    <p>Complete guide to building intelligent automation workflows with n8n and AI</p>
+
+                    <h2 id="introduction">Introduction</h2>
+                    <p>AI Automation combines the power of n8n workflow automation with advanced AI models to create intelligent, adaptive business processes. This documentation will guide you through everything you need to know to build your first AI-powered workflow.</p>
+
+                    <div class="alert alert-info">
+                        <strong>New to n8n?</strong> We recommend starting with the basic concepts before diving into AI integration.
+                    </div>
+
+                    <h3>What You'll Learn</h3>
+                    <ul>
+                        <li>How to set up and configure n8n</li>
+                        <li>Core concepts of workflow automation</li>
+                        <li>Integrating AI models into your workflows</li>
+                        <li>Managing and transforming data</li>
+                        <li>Best practices for production deployments</li>
+                        <li>Common patterns and use cases</li>
+                    </ul>
+
+                    <h2 id="installation">Installation</h2>
+                    <p>There are multiple ways to install n8n depending on your environment and preferences.</p>
+
+                    <h3>Docker Installation (Recommended)</h3>
+                    <p>The easiest way to get started is with Docker:</p>
+                    <pre><code>docker run -it --rm \
+  --name n8n \
+  -p 5678:5678 \
+  -v ~/.n8n:/home/node/.n8n \
+  n8nio/n8n</code></pre>
+
+                    <h3>NPM Installation</h3>
+                    <p>Install globally via npm:</p>
+                    <pre><code>npm install n8n -g
+n8n start</code></pre>
+
+                    <h3>Desktop Application</h3>
+                    <p>Download the desktop app from <a href="https://n8n.io/download" style="color: var(--primary-color);">n8n.io</a> for a native experience.</p>
+
+                    <div class="alert alert-success">
+                        <strong>Success!</strong> After installation, navigate to http://localhost:5678 to access n8n.
+                    </div>
+
+                    <h2 id="core-concepts">Core Concepts</h2>
+
+                    <h3>Workflows</h3>
+                    <p>A workflow is a series of connected nodes that define an automation process. Each workflow consists of:</p>
+                    <ul>
+                        <li><strong>Trigger Node:</strong> Starting point that initiates the workflow</li>
+                        <li><strong>Processing Nodes:</strong> Transform data, make decisions, or call APIs</li>
+                        <li><strong>Action Nodes:</strong> Perform final actions like sending emails or updating databases</li>
+                    </ul>
+
+                    <h3>Nodes</h3>
+                    <p>Nodes are the building blocks of workflows. Key node types include:</p>
+                    <ul>
+                        <li><strong>Trigger Nodes:</strong> Webhook, Schedule, Email, etc.</li>
+                        <li><strong>AI Nodes:</strong> OpenAI, Anthropic, Hugging Face</li>
+                        <li><strong>Logic Nodes:</strong> IF, Switch, Merge</li>
+                        <li><strong>Data Nodes:</strong> Set, Function, Code</li>
+                        <li><strong>Integration Nodes:</strong> 400+ app integrations</li>
+                    </ul>
+
+                    <h3>Data Flow</h3>
+                    <p>Data flows between nodes in JSON format:</p>
+                    <pre><code>[
+  {
+    "json": {
+      "field1": "value1",
+      "field2": "value2"
+    }
+  }
+]</code></pre>
+
+                    <h2 id="building-workflows">Building Workflows</h2>
+
+                    <h3>Step 1: Add a Trigger</h3>
+                    <p>Every workflow starts with a trigger. Common triggers:</p>
+                    <ul>
+                        <li><strong>Webhook:</strong> Trigger via HTTP requests</li>
+                        <li><strong>Schedule:</strong> Run on a schedule (cron)</li>
+                        <li><strong>Manual:</strong> For testing and development</li>
+                    </ul>
+
+                    <h3>Step 2: Add Processing Nodes</h3>
+                    <p>Connect nodes to process your data. Use expressions to reference data:</p>
+                    <pre><code>// Access current node data
+{{ $json.propertyName }}
+
+// Reference other nodes
+{{ $node["NodeName"].json }}
+
+// Current timestamp
+{{ $now }}</code></pre>
+
+                    <h3>Step 3: Add Actions</h3>
+                    <p>Complete your workflow with action nodes that perform the final operations.</p>
+
+                    <h2 id="ai-integration">AI Integration</h2>
+
+                    <h3>OpenAI Integration</h3>
+                    <p>Configure the OpenAI node for chat completions:</p>
+                    <pre><code>{
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant"
+    },
+    {
+      "role": "user",
+      "content": "{{ $json.userQuery }}"
+    }
+  ]
+}</code></pre>
+
+                    <h3>Anthropic (Claude) Integration</h3>
+                    <pre><code>{
+  "model": "claude-3-opus-20240229",
+  "max_tokens": 1024,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Analyze: {{ $json.data }}"
+    }
+  ]
+}</code></pre>
+
+                    <div class="alert alert-warning">
+                        <strong>API Keys Required:</strong> You'll need API keys from AI providers. Store them securely in n8n credentials.
+                    </div>
+
+                    <h2 id="data-management">Data Management</h2>
+
+                    <h3>Data Transformation</h3>
+                    <p>Use the Function node for complex transformations:</p>
+                    <pre><code>const items = $input.all();
+return items.map(item => ({
+  json: {
+    id: item.json.id,
+    processed: item.json.value * 2
+  }
+}));</code></pre>
+
+                    <h3>Error Handling</h3>
+                    <p>Always include error handling in production workflows:</p>
+                    <pre><code>try {
+  const result = await riskyOperation();
+  return [{ json: { success: true, data: result } }];
+} catch (error) {
+  return [{ json: { success: false, error: error.message } }];
+}</code></pre>
+
+                    <h2 id="best-practices">Best Practices</h2>
+
+                    <h3>Security</h3>
+                    <ul>
+                        <li>Store API keys in n8n credentials, never hardcode</li>
+                        <li>Use webhook authentication</li>
+                        <li>Sanitize user inputs before AI processing</li>
+                        <li>Implement rate limiting</li>
+                    </ul>
+
+                    <h3>Performance</h3>
+                    <ul>
+                        <li>Use batch processing when possible</li>
+                        <li>Implement caching for repeated queries</li>
+                        <li>Monitor API usage and costs</li>
+                        <li>Use appropriate AI models (smaller for simple tasks)</li>
+                    </ul>
+
+                    <h3>Reliability</h3>
+                    <ul>
+                        <li>Add error handling to all workflows</li>
+                        <li>Implement retry logic for API calls</li>
+                        <li>Monitor workflow executions</li>
+                        <li>Test with various data scenarios</li>
+                    </ul>
+
+                    <h2 id="troubleshooting">Troubleshooting</h2>
+
+                    <h3>Common Issues</h3>
+
+                    <h4>Workflow Not Triggering</h4>
+                    <p>Check that:</p>
+                    <ul>
+                        <li>Workflow is activated</li>
+                        <li>Trigger is properly configured</li>
+                        <li>Webhook URL is correct</li>
+                    </ul>
+
+                    <h4>AI Response Errors</h4>
+                    <p>Verify:</p>
+                    <ul>
+                        <li>API key is valid and has credits</li>
+                        <li>Model name is correct</li>
+                        <li>Prompt is within token limits</li>
+                        <li>Rate limits not exceeded</li>
+                    </ul>
+
+                    <h4>Data Not Flowing</h4>
+                    <p>Common causes:</p>
+                    <ul>
+                        <li>Incorrect expression syntax</li>
+                        <li>Node returning empty array</li>
+                        <li>Type mismatch in data</li>
+                    </ul>
+
+                    <h2 id="examples">Examples</h2>
+
+                    <h3>Simple Content Generator</h3>
+                    <pre><code>// 1. Schedule Trigger (daily at 9 AM)
+// 2. HTTP Request (fetch topics)
+// 3. OpenAI Node
+{
+  "model": "gpt-4",
+  "prompt": "Write a blog post: {{ $json.topic }}"
+}
+// 4. Set Node (format output)
+// 5. Database/Email Node (save/send)</code></pre>
+
+                    <h3>Email Sentiment Analyzer</h3>
+                    <pre><code>// 1. Email Trigger (IMAP)
+// 2. OpenAI Node
+{
+  "prompt": "Analyze sentiment: {{ $json.body }}"
+}
+// 3. IF Node (check sentiment)
+// 4. Send alert if negative</code></pre>
+
+                    <div class="alert alert-info">
+                        <strong>More Examples:</strong> Visit our <a href="/workflows" style="color: var(--primary-color);">Workflows page</a> for complete templates.
+                    </div>
+
+                    <h2>Next Steps</h2>
+                    <p>Now that you understand the basics:</p>
+                    <ol>
+                        <li>Explore our <a href="/workflows" style="color: var(--primary-color);">workflow templates</a></li>
+                        <li>Join the <a href="#" style="color: var(--primary-color);">community forum</a></li>
+                        <li>Build your first automation</li>
+                        <li>Share your workflows with others</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-robot"></i> AI Automation</h3>
+                    <p>Build intelligent workflows with n8n and AI</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="/documentation">Documentation</a></li>
+                        <li><a href="/workflows">Workflow Templates</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Community Forum</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="/#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">License</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 AI Automation. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <script>
+        // Smooth scroll with sidebar navigation
+        document.querySelectorAll('.docs-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Update active link
+                document.querySelectorAll('.docs-nav a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+
+                // Smooth scroll to section
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Update active link on scroll
+        const sections = document.querySelectorAll('.docs-content h2[id]');
+        const navLinks = document.querySelectorAll('.docs-nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore pre-built AI automation workflow templates for various business needs">
+    <title>Workflow Templates | AI Automation with n8n</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .workflows-header {
+            padding: 3rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .workflows-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .workflows-filter {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border-color);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--gradient);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .workflow-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .workflow-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-color);
+        }
+
+        .workflow-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .workflow-header h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .complexity-badge {
+            padding: 0.375rem 0.875rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .complexity-easy {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .complexity-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .complexity-hard {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .workflow-footer {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .workflow-footer span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .workflow-footer i {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-robot"></i>
+                <span>AI Automation</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/workflows" class="active">Workflows</a></li>
+                <li><a href="/documentation">Documentation</a></li>
+                <li><a href="/#contact" class="btn-primary">Get Started</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Workflows Header -->
+    <div class="workflows-header">
+        <div class="container">
+            <h1>Workflow Templates</h1>
+            <p style="font-size: 1.25rem; opacity: 0.9;">Pre-built automation workflows to jumpstart your projects</p>
+        </div>
+    </div>
+
+    <!-- Workflows Section -->
+    <section class="features">
+        <div class="container">
+            <div class="workflows-filter">
+                <button class="filter-btn active" data-filter="all">All Workflows</button>
+                <button class="filter-btn" data-filter="Customer Support">Customer Support</button>
+                <button class="filter-btn" data-filter="Marketing">Marketing</button>
+                <button class="filter-btn" data-filter="Sales">Sales</button>
+                <button class="filter-btn" data-filter="Operations">Operations</button>
+                <button class="filter-btn" data-filter="Finance">Finance</button>
+            </div>
+
+            <div id="workflows-container" class="features-grid">
+                <!-- Workflows will be loaded dynamically via JavaScript -->
+                <div class="workflow-card">
+                    <div class="workflow-header">
+                        <h3>Customer Service Automation</h3>
+                        <span class="complexity-badge complexity-medium">Medium</span>
+                    </div>
+                    <p>Automatically route and respond to customer inquiries using AI. Includes sentiment analysis, intent detection, and automated responses.</p>
+                    <div class="workflow-footer">
+                        <span><i class="fas fa-tag"></i> Customer Support</span>
+                        <span><i class="fas fa-clock"></i> 2-3 hours</span>
+                    </div>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-header">
+                        <h3>Content Generation Pipeline</h3>
+                        <span class="complexity-badge complexity-easy">Easy</span>
+                    </div>
+                    <p>Generate blog posts and social media content automatically. Schedule posts, track performance, and optimize engagement.</p>
+                    <div class="workflow-footer">
+                        <span><i class="fas fa-tag"></i> Marketing</span>
+                        <span><i class="fas fa-clock"></i> 1-2 hours</span>
+                    </div>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-header">
+                        <h3>Document Processing</h3>
+                        <span class="complexity-badge complexity-hard">Hard</span>
+                    </div>
+                    <p>Extract and analyze data from PDFs and images using OCR and AI. Classify documents, extract entities, and store structured data.</p>
+                    <div class="workflow-footer">
+                        <span><i class="fas fa-tag"></i> Operations</span>
+                        <span><i class="fas fa-clock"></i> 4-5 hours</span>
+                    </div>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-header">
+                        <h3>Lead Qualification</h3>
+                        <span class="complexity-badge complexity-medium">Medium</span>
+                    </div>
+                    <p>Score and route leads automatically based on AI analysis. Integrate with CRM, send notifications, and track conversion rates.</p>
+                    <div class="workflow-footer">
+                        <span><i class="fas fa-tag"></i> Sales</span>
+                        <span><i class="fas fa-clock"></i> 2-3 hours</span>
+                    </div>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-header">
+                        <h3>Sentiment Analysis</h3>
+                        <span class="complexity-badge complexity-easy">Easy</span>
+                    </div>
+                    <p>Monitor customer feedback and alert on negative sentiment. Track trends over time and generate reports.</p>
+                    <div class="workflow-footer">
+                        <span><i class="fas fa-tag"></i> Customer Support</span>
+                        <span><i class="fas fa-clock"></i> 1-2 hours</span>
+                    </div>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-header">
+                        <h3>Invoice Processing</h3>
+                        <span class="complexity-badge complexity-hard">Hard</span>
+                    </div>
+                    <p>Automatically extract, validate, and process invoices. Match with purchase orders, detect anomalies, and route for approval.</p>
+                    <div class="workflow-footer">
+                        <span><i class="fas fa-tag"></i> Finance</span>
+                        <span><i class="fas fa-clock"></i> 4-6 hours</span>
+                    </div>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-header">
+                        <h3>Email Marketing Automation</h3>
+                        <span class="complexity-badge complexity-medium">Medium</span>
+                    </div>
+                    <p>Personalize email campaigns using AI. Segment audiences, optimize send times, and A/B test subject lines.</p>
+                    <div class="workflow-footer">
+                        <span><i class="fas fa-tag"></i> Marketing</span>
+                        <span><i class="fas fa-clock"></i> 2-3 hours</span>
+                    </div>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-header">
+                        <h3>Social Media Monitoring</h3>
+                        <span class="complexity-badge complexity-easy">Easy</span>
+                    </div>
+                    <p>Track brand mentions, analyze sentiment, and respond automatically. Generate daily reports and trend alerts.</p>
+                    <div class="workflow-footer">
+                        <span><i class="fas fa-tag"></i> Marketing</span>
+                        <span><i class="fas fa-clock"></i> 1-2 hours</span>
+                    </div>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-header">
+                        <h3>Meeting Transcription & Summary</h3>
+                        <span class="complexity-badge complexity-medium">Medium</span>
+                    </div>
+                    <p>Automatically transcribe meetings, generate summaries, extract action items, and distribute to participants.</p>
+                    <div class="workflow-footer">
+                        <span><i class="fas fa-tag"></i> Operations</span>
+                        <span><i class="fas fa-clock"></i> 2-3 hours</span>
+                    </div>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-header">
+                        <h3>Inventory Management</h3>
+                        <span class="complexity-badge complexity-hard">Hard</span>
+                    </div>
+                    <p>Predict demand, automate reordering, and optimize stock levels using AI. Integrate with suppliers and notify on anomalies.</p>
+                    <div class="workflow-footer">
+                        <span><i class="fas fa-tag"></i> Operations</span>
+                        <span><i class="fas fa-clock"></i> 4-5 hours</span>
+                    </div>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-header">
+                        <h3>Resume Screening</h3>
+                        <span class="complexity-badge complexity-medium">Medium</span>
+                    </div>
+                    <p>Parse resumes, extract skills and experience, match against job requirements, and rank candidates automatically.</p>
+                    <div class="workflow-footer">
+                        <span><i class="fas fa-tag"></i> Operations</span>
+                        <span><i class="fas fa-clock"></i> 3-4 hours</span>
+                    </div>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-header">
+                        <h3>Product Recommendation Engine</h3>
+                        <span class="complexity-badge complexity-hard">Hard</span>
+                    </div>
+                    <p>Analyze customer behavior and preferences to generate personalized product recommendations. Increase conversion rates.</p>
+                    <div class="workflow-footer">
+                        <span><i class="fas fa-tag"></i> Sales</span>
+                        <span><i class="fas fa-clock"></i> 5-6 hours</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Build Your Own?</h2>
+            <p>Start with our templates and customize for your needs</p>
+            <div class="cta-buttons">
+                <a href="/documentation" class="btn btn-primary">Read Documentation</a>
+                <a href="/#contact" class="btn btn-secondary">Get Support</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-robot"></i> AI Automation</h3>
+                    <p>Build intelligent workflows with n8n and AI</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="/documentation">Documentation</a></li>
+                        <li><a href="/workflows">Workflow Templates</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Community Forum</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="/#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">License</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 AI Automation. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <script>
+        // Filter workflows
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const workflowCards = document.querySelectorAll('.workflow-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.getAttribute('data-filter');
+
+                // Update active button
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Filter cards
+                workflowCards.forEach(card => {
+                    const category = card.querySelector('.workflow-footer span:first-child').textContent.trim();
+
+                    if (filter === 'all' || category.includes(filter)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
