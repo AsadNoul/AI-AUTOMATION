@@ -9,11 +9,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="floating-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+    </div>
+
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar glass-effect">
         <div class="container">
             <div class="nav-brand">
-                <i class="fas fa-robot"></i>
+                <div class="logo-3d">
+                    <i class="fas fa-robot"></i>
+                </div>
                 <span>AI Automation</span>
             </div>
             <ul class="nav-menu">
@@ -21,7 +37,7 @@
                 <li><a href="/about">About</a></li>
                 <li><a href="/workflows">Workflows</a></li>
                 <li><a href="/documentation">Documentation</a></li>
-                <li><a href="#contact" class="btn-primary">Get Started</a></li>
+                <li><a href="#contact" class="btn-primary btn-3d">Get Started</a></li>
             </ul>
             <div class="hamburger">
                 <span></span>
@@ -31,313 +47,361 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section with 3D Characters -->
     <section class="hero">
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1 class="hero-title">Build Intelligent <span class="gradient-text">AI Automations</span> for Your Business</h1>
+                    <div class="badge-3d">
+                        <i class="fas fa-star"></i>
+                        <span>Designed by ASAD ALI NAUL</span>
+                    </div>
+                    <h1 class="hero-title animate-text">
+                        Build Intelligent
+                        <span class="gradient-text-animated">AI Automations</span>
+                        for Your Business
+                    </h1>
                     <p class="hero-description">Harness the power of n8n and AI to create sophisticated workflows that learn, adapt, and scale with your business needs.</p>
                     <div class="hero-buttons">
-                        <a href="#getting-started" class="btn btn-primary">Get Started</a>
-                        <a href="/workflows" class="btn btn-secondary">Explore Workflows</a>
+                        <a href="#getting-started" class="btn btn-primary btn-glow">
+                            <i class="fas fa-rocket"></i>
+                            Get Started Free
+                        </a>
+                        <a href="/workflows" class="btn btn-secondary btn-glass">
+                            <i class="fas fa-compass"></i>
+                            Explore Workflows
+                        </a>
                     </div>
                     <div class="hero-stats">
-                        <div class="stat">
-                            <span class="stat-number">400+</span>
+                        <div class="stat stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-plug"></i>
+                            </div>
+                            <span class="stat-number" data-count="400">0</span>
                             <span class="stat-label">Integrations</span>
                         </div>
-                        <div class="stat">
+                        <div class="stat stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
                             <span class="stat-number">10x</span>
-                            <span class="stat-label">Faster Automation</span>
+                            <span class="stat-label">Faster</span>
                         </div>
-                        <div class="stat">
+                        <div class="stat stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
                             <span class="stat-number">24/7</span>
                             <span class="stat-label">Operation</span>
                         </div>
                     </div>
                 </div>
                 <div class="hero-visual">
-                    <div class="workflow-preview">
-                        <div class="node-card">
+                    <!-- 3D Robot Character -->
+                    <div class="character-3d">
+                        <div class="robot-container">
+                            <div class="robot-head">
+                                <div class="robot-antenna"></div>
+                                <div class="robot-eye left"></div>
+                                <div class="robot-eye right"></div>
+                                <div class="robot-smile"></div>
+                            </div>
+                            <div class="robot-body">
+                                <div class="robot-light"></div>
+                                <div class="robot-panel"></div>
+                            </div>
+                            <div class="robot-arm left"></div>
+                            <div class="robot-arm right"></div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Workflow Nodes -->
+                    <div class="workflow-3d">
+                        <div class="node-3d node-trigger">
+                            <div class="node-glow"></div>
                             <i class="fas fa-bolt"></i>
                             <span>Trigger</span>
                         </div>
-                        <div class="connection-line"></div>
-                        <div class="node-card ai-node">
+                        <div class="connection-animated"></div>
+                        <div class="node-3d node-ai">
+                            <div class="node-glow"></div>
                             <i class="fas fa-brain"></i>
-                            <span>AI Process</span>
+                            <span>AI Magic</span>
                         </div>
-                        <div class="connection-line"></div>
-                        <div class="node-card">
-                            <i class="fas fa-check"></i>
+                        <div class="connection-animated"></div>
+                        <div class="node-3d node-action">
+                            <div class="node-glow"></div>
+                            <i class="fas fa-check-circle"></i>
                             <span>Action</span>
                         </div>
                     </div>
+
+                    <!-- Floating Icons -->
+                    <div class="floating-icon" style="top: 10%; left: 5%;">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="floating-icon" style="top: 20%; right: 10%;">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="floating-icon" style="bottom: 20%; left: 10%;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="floating-icon" style="bottom: 30%; right: 5%;">
+                        <i class="fas fa-cog"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
+    <!-- Features Section with 3D Cards -->
     <section class="features">
         <div class="container">
-            <h2 class="section-title">Why AI Automation?</h2>
-            <p class="section-subtitle">Transform your business processes with intelligent automation</p>
+            <div class="section-header">
+                <h2 class="section-title">Why AI Automation?</h2>
+                <p class="section-subtitle">Transform your business processes with intelligent automation</p>
+            </div>
 
             <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
+                <div class="feature-card card-3d">
+                    <div class="feature-icon icon-3d brain-icon">
                         <i class="fas fa-brain"></i>
+                        <div class="icon-particles"></div>
                     </div>
                     <h3>Intelligent Decision Making</h3>
                     <p>AI models analyze data and make context-aware decisions automatically, reducing manual intervention.</p>
+                    <div class="card-shine"></div>
                 </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">
+                <div class="feature-card card-3d">
+                    <div class="feature-icon icon-3d language-icon">
                         <i class="fas fa-language"></i>
+                        <div class="icon-particles"></div>
                     </div>
                     <h3>Natural Language Processing</h3>
                     <p>Understand and process human language for customer service, content generation, and more.</p>
+                    <div class="card-shine"></div>
                 </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">
+                <div class="feature-card card-3d">
+                    <div class="feature-icon icon-3d chart-icon">
                         <i class="fas fa-chart-line"></i>
+                        <div class="icon-particles"></div>
                     </div>
                     <h3>Predictive Analytics</h3>
                     <p>Forecast trends and outcomes based on historical data with advanced machine learning models.</p>
+                    <div class="card-shine"></div>
                 </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">
+                <div class="feature-card card-3d">
+                    <div class="feature-icon icon-3d refresh-icon">
                         <i class="fas fa-arrows-spin"></i>
+                        <div class="icon-particles"></div>
                     </div>
                     <h3>Adaptive Learning</h3>
                     <p>Systems that improve over time based on feedback and new data patterns.</p>
+                    <div class="card-shine"></div>
                 </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">
+                <div class="feature-card card-3d">
+                    <div class="feature-icon icon-3d clock-icon">
                         <i class="fas fa-clock"></i>
+                        <div class="icon-particles"></div>
                     </div>
                     <h3>24/7 Operation</h3>
                     <p>Automated workflows run continuously without human oversight, ensuring nothing falls through the cracks.</p>
+                    <div class="card-shine"></div>
                 </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">
+                <div class="feature-card card-3d">
+                    <div class="feature-icon icon-3d money-icon">
                         <i class="fas fa-coins"></i>
+                        <div class="icon-particles"></div>
                     </div>
                     <h3>Cost Reduction</h3>
                     <p>Reduce manual labor costs and eliminate human errors with intelligent automation.</p>
+                    <div class="card-shine"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Use Cases Section -->
+    <!-- Stats Section with Animation -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-icon-large">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="stat-large" data-count="10000">0</h3>
+                    <p>Happy Users</p>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon-large">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3 class="stat-large" data-count="50000">0</h3>
+                    <p>Workflows Created</p>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon-large">
+                        <i class="fas fa-save"></i>
+                    </div>
+                    <h3 class="stat-large">$2M+</h3>
+                    <p>Saved in Costs</p>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon-large">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3 class="stat-large">4.9/5</h3>
+                    <p>User Rating</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases with 3D Icons -->
     <section class="use-cases">
         <div class="container">
             <h2 class="section-title">Popular Use Cases</h2>
             <p class="section-subtitle">See how businesses are using AI automation</p>
 
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="sales">Sales & Marketing</button>
-                <button class="tab-btn" data-tab="support">Customer Support</button>
-                <button class="tab-btn" data-tab="operations">Operations</button>
-                <button class="tab-btn" data-tab="hr">HR & Recruitment</button>
-            </div>
-
-            <div class="tab-content active" id="sales">
-                <div class="use-case-layout">
-                    <div class="use-case-text">
-                        <h3>Lead Qualification Automation</h3>
-                        <p>Automatically qualify and route leads using AI-powered analysis.</p>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> Receive leads from multiple sources</li>
-                            <li><i class="fas fa-check"></i> AI analyzes lead quality and fit</li>
-                            <li><i class="fas fa-check"></i> Automatic scoring and routing</li>
-                            <li><i class="fas fa-check"></i> Personalized follow-up generation</li>
-                        </ul>
-                        <a href="/workflows#lead-qualification" class="btn btn-outline">View Workflow</a>
+            <div class="use-cases-grid">
+                <div class="use-case-card">
+                    <div class="use-case-icon icon-bounce">
+                        <i class="fas fa-headset"></i>
                     </div>
-                    <div class="use-case-diagram">
-                        <div class="workflow-step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">Lead Capture</div>
-                        </div>
-                        <div class="workflow-arrow">→</div>
-                        <div class="workflow-step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">AI Analysis</div>
-                        </div>
-                        <div class="workflow-arrow">→</div>
-                        <div class="workflow-step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">Auto Routing</div>
-                        </div>
-                    </div>
+                    <h3>Customer Support</h3>
+                    <p>Automatically handle inquiries with AI-powered responses</p>
+                    <a href="/workflows#support" class="learn-more">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
-            </div>
 
-            <div class="tab-content" id="support">
-                <div class="use-case-layout">
-                    <div class="use-case-text">
-                        <h3>Intelligent Ticket Routing</h3>
-                        <p>Analyze and route support tickets with AI-powered intent detection.</p>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> Parse incoming support tickets</li>
-                            <li><i class="fas fa-check"></i> Extract intent and urgency with NLP</li>
-                            <li><i class="fas fa-check"></i> Route to appropriate department</li>
-                            <li><i class="fas fa-check"></i> Generate initial response suggestions</li>
-                        </ul>
-                        <a href="/workflows#ticket-routing" class="btn btn-outline">View Workflow</a>
+                <div class="use-case-card">
+                    <div class="use-case-icon icon-bounce">
+                        <i class="fas fa-bullhorn"></i>
                     </div>
-                    <div class="use-case-diagram">
-                        <div class="workflow-step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">Ticket Received</div>
-                        </div>
-                        <div class="workflow-arrow">→</div>
-                        <div class="workflow-step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">Sentiment Analysis</div>
-                        </div>
-                        <div class="workflow-arrow">→</div>
-                        <div class="workflow-step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">Auto Response</div>
-                        </div>
-                    </div>
+                    <h3>Marketing Automation</h3>
+                    <p>Generate content and manage campaigns effortlessly</p>
+                    <a href="/workflows#marketing" class="learn-more">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
-            </div>
 
-            <div class="tab-content" id="operations">
-                <div class="use-case-layout">
-                    <div class="use-case-text">
-                        <h3>Document Processing</h3>
-                        <p>Extract and analyze data from documents using OCR and AI.</p>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> Process PDFs and images</li>
-                            <li><i class="fas fa-check"></i> Extract text with OCR</li>
-                            <li><i class="fas fa-check"></i> Classify and categorize documents</li>
-                            <li><i class="fas fa-check"></i> Store structured data automatically</li>
-                        </ul>
-                        <a href="/workflows#document-processing" class="btn btn-outline">View Workflow</a>
+                <div class="use-case-card">
+                    <div class="use-case-icon icon-bounce">
+                        <i class="fas fa-file-invoice"></i>
                     </div>
-                    <div class="use-case-diagram">
-                        <div class="workflow-step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">Upload Document</div>
-                        </div>
-                        <div class="workflow-arrow">→</div>
-                        <div class="workflow-step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">AI Extraction</div>
-                        </div>
-                        <div class="workflow-arrow">→</div>
-                        <div class="workflow-step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">Data Storage</div>
-                        </div>
-                    </div>
+                    <h3>Document Processing</h3>
+                    <p>Extract data from PDFs and images automatically</p>
+                    <a href="/workflows#documents" class="learn-more">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
-            </div>
 
-            <div class="tab-content" id="hr">
-                <div class="use-case-layout">
-                    <div class="use-case-text">
-                        <h3>Resume Screening</h3>
-                        <p>Automatically screen and rank candidates using AI analysis.</p>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> Parse resumes automatically</li>
-                            <li><i class="fas fa-check"></i> Extract skills and experience</li>
-                            <li><i class="fas fa-check"></i> Match against job requirements</li>
-                            <li><i class="fas fa-check"></i> Schedule interviews automatically</li>
-                        </ul>
-                        <a href="/workflows#resume-screening" class="btn btn-outline">View Workflow</a>
+                <div class="use-case-card">
+                    <div class="use-case-icon icon-bounce">
+                        <i class="fas fa-user-tie"></i>
                     </div>
-                    <div class="use-case-diagram">
-                        <div class="workflow-step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">Resume Upload</div>
-                        </div>
-                        <div class="workflow-arrow">→</div>
-                        <div class="workflow-step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">AI Matching</div>
-                        </div>
-                        <div class="workflow-arrow">→</div>
-                        <div class="workflow-step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">Candidate Ranking</div>
-                        </div>
-                    </div>
+                    <h3>Sales & Lead Management</h3>
+                    <p>Qualify and route leads with intelligent scoring</p>
+                    <a href="/workflows#sales" class="learn-more">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Getting Started Section -->
+    <!-- Getting Started with 3D Steps -->
     <section class="getting-started" id="getting-started">
         <div class="container">
             <h2 class="section-title">Get Started in 4 Simple Steps</h2>
             <p class="section-subtitle">Build your first AI automation workflow today</p>
 
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-header">
-                        <span class="step-num">01</span>
+            <div class="steps-container">
+                <div class="step-3d" data-step="1">
+                    <div class="step-number">01</div>
+                    <div class="step-icon">
                         <i class="fas fa-download"></i>
                     </div>
                     <h3>Install n8n</h3>
-                    <p>Set up n8n using Docker, npm, or the desktop application</p>
+                    <p>Set up n8n using Docker, npm, or desktop app</p>
                     <code>docker run -p 5678:5678 n8nio/n8n</code>
                 </div>
 
-                <div class="step-card">
-                    <div class="step-header">
-                        <span class="step-num">02</span>
+                <div class="step-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+
+                <div class="step-3d" data-step="2">
+                    <div class="step-number">02</div>
+                    <div class="step-icon">
                         <i class="fas fa-project-diagram"></i>
                     </div>
                     <h3>Create Workflow</h3>
-                    <p>Start with a simple trigger and connect your first nodes</p>
+                    <p>Start with a trigger and connect your nodes</p>
                     <code>Trigger → Process → Action</code>
                 </div>
 
-                <div class="step-card">
-                    <div class="step-header">
-                        <span class="step-num">03</span>
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <h3>Integrate AI</h3>
-                    <p>Connect OpenAI, Anthropic, or other AI providers</p>
-                    <code>Add AI Node → Configure → Test</code>
+                <div class="step-arrow">
+                    <i class="fas fa-arrow-right"></i>
                 </div>
 
-                <div class="step-card">
-                    <div class="step-header">
-                        <span class="step-num">04</span>
+                <div class="step-3d" data-step="3">
+                    <div class="step-number">03</div>
+                    <div class="step-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Add AI Power</h3>
+                    <p>Connect OpenAI, Claude, or other AI services</p>
+                    <code>AI Node → Configure → Test</code>
+                </div>
+
+                <div class="step-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+
+                <div class="step-3d" data-step="4">
+                    <div class="step-number">04</div>
+                    <div class="step-icon">
                         <i class="fas fa-rocket"></i>
                     </div>
-                    <h3>Deploy</h3>
-                    <p>Test thoroughly and deploy to production</p>
-                    <code>Test → Monitor → Scale</code>
+                    <h3>Launch & Scale</h3>
+                    <p>Test, deploy, and monitor your automation</p>
+                    <code>Test → Deploy → Monitor</code>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
+    <!-- CTA Section with 3D Effect -->
     <section class="cta">
+        <div class="cta-character">
+            <div class="rocket-container">
+                <div class="rocket">
+                    <div class="rocket-body">
+                        <div class="rocket-window"></div>
+                    </div>
+                    <div class="rocket-fire"></div>
+                </div>
+            </div>
+        </div>
         <div class="container">
             <h2>Ready to Transform Your Business?</h2>
             <p>Start building intelligent automation workflows today</p>
             <div class="cta-buttons">
-                <a href="/documentation" class="btn btn-primary">Read Documentation</a>
-                <a href="https://github.com/n8n-io/n8n" class="btn btn-secondary" target="_blank">View on GitHub</a>
+                <a href="/documentation" class="btn btn-primary btn-large">
+                    <i class="fas fa-book"></i>
+                    Read Documentation
+                </a>
+                <a href="https://github.com/n8n-io/n8n" class="btn btn-secondary btn-large" target="_blank">
+                    <i class="fab fa-github"></i>
+                    View on GitHub
+                </a>
             </div>
         </div>
     </section>
@@ -350,34 +414,40 @@
 
             <div class="contact-layout">
                 <div class="contact-info">
-                    <div class="info-card">
+                    <div class="info-card card-3d">
                         <i class="fas fa-envelope"></i>
                         <h3>Email Us</h3>
                         <p>contact@aiautomation.com</p>
                     </div>
-                    <div class="info-card">
+                    <div class="info-card card-3d">
                         <i class="fas fa-comments"></i>
                         <h3>Join Community</h3>
                         <p>Discord & Forum</p>
                     </div>
-                    <div class="info-card">
+                    <div class="info-card card-3d">
                         <i class="fas fa-book"></i>
                         <h3>Documentation</h3>
                         <p>Comprehensive guides</p>
                     </div>
                 </div>
 
-                <form class="contact-form" id="contactForm">
+                <form class="contact-form glass-card" id="contactForm">
                     <div class="form-group">
                         <input type="text" id="name" name="name" placeholder="Your Name" required>
+                        <i class="fas fa-user"></i>
                     </div>
                     <div class="form-group">
                         <input type="email" id="email" name="email" placeholder="Your Email" required>
+                        <i class="fas fa-envelope"></i>
                     </div>
                     <div class="form-group">
                         <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
+                        <i class="fas fa-message"></i>
                     </div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <i class="fas fa-paper-plane"></i>
+                        Send Message
+                    </button>
                 </form>
             </div>
         </div>
@@ -388,49 +458,59 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3><i class="fas fa-robot"></i> AI Automation</h3>
+                    <h3>
+                        <div class="logo-3d">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        AI Automation
+                    </h3>
                     <p>Build intelligent workflows with n8n and AI</p>
+                    <p class="creator-badge">
+                        <i class="fas fa-heart"></i>
+                        Created by <strong>ASAD ALI NAUL</strong>
+                    </p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-discord"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
 
                 <div class="footer-section">
                     <h4>Resources</h4>
                     <ul>
-                        <li><a href="/documentation">Documentation</a></li>
-                        <li><a href="/workflows">Workflow Templates</a></li>
-                        <li><a href="#">API Reference</a></li>
-                        <li><a href="#">Community Forum</a></li>
+                        <li><a href="/documentation"><i class="fas fa-book"></i> Documentation</a></li>
+                        <li><a href="/workflows"><i class="fas fa-project-diagram"></i> Workflow Templates</a></li>
+                        <li><a href="#"><i class="fas fa-code"></i> API Reference</a></li>
+                        <li><a href="#"><i class="fas fa-users"></i> Community Forum</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-section">
                     <h4>Company</h4>
                     <ul>
-                        <li><a href="/about">About Us</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="/about"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li><a href="#"><i class="fas fa-blog"></i> Blog</a></li>
+                        <li><a href="#"><i class="fas fa-briefcase"></i> Careers</a></li>
+                        <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-section">
                     <h4>Legal</h4>
                     <ul>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Cookie Policy</a></li>
-                        <li><a href="#">License</a></li>
+                        <li><a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                        <li><a href="#"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
+                        <li><a href="#"><i class="fas fa-cookie-bite"></i> Cookie Policy</a></li>
+                        <li><a href="#"><i class="fas fa-certificate"></i> License</a></li>
                     </ul>
                 </div>
             </div>
 
             <div class="footer-bottom">
                 <p>&copy; 2024 AI Automation. All rights reserved.</p>
+                <p>Designed with <i class="fas fa-heart pulse"></i> by <strong>ASAD ALI NAUL</strong></p>
             </div>
         </div>
     </footer>

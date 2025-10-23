@@ -1,3 +1,8 @@
+// ============================================
+// AI AUTOMATION - INTERACTIVE JAVASCRIPT
+// Designed by ASAD ALI NAUL
+// ============================================
+
 // Mobile Navigation
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
@@ -17,29 +22,60 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
     });
 });
 
-// Tabs Functionality
-const tabButtons = document.querySelectorAll('.tab-btn');
-const tabContents = document.querySelectorAll('.tab-content');
+// ============================================
+// ANIMATED COUNTERS
+// ============================================
 
-tabButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const tabId = button.getAttribute('data-tab');
+function animateCounter(element, target, duration = 2000) {
+    const start = 0;
+    const increment = target / (duration / 16);
+    let current = start;
 
-        // Remove active class from all buttons and contents
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-        tabContents.forEach(content => content.classList.remove('active'));
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            element.textContent = target.toLocaleString();
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(current).toLocaleString();
+        }
+    }, 16);
+}
 
-        // Add active class to clicked button and corresponding content
-        button.classList.add('active');
-        document.getElementById(tabId).classList.add('active');
+// Intersection Observer for counter animation
+const observerOptions = {
+    threshold: 0.5,
+    rootMargin: '0px'
+};
+
+const countersObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const element = entry.target;
+            const count = element.getAttribute('data-count');
+
+            if (count && !element.classList.contains('counted')) {
+                element.classList.add('counted');
+                animateCounter(element, parseInt(count));
+            }
+        }
     });
+}, observerOptions);
+
+// Observe all counter elements
+document.querySelectorAll('[data-count]').forEach(counter => {
+    countersObserver.observe(counter);
 });
 
-// Smooth Scrolling
+// ============================================
+// SMOOTH SCROLLING
+// ============================================
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
+
         if (target) {
             target.scrollIntoView({
                 behavior: 'smooth',
@@ -49,12 +85,74 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Contact Form Submission
+// ============================================
+// SCROLL ANIMATIONS
+// ============================================
+
+const scrollAnimationObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.animation = 'fadeInUp 0.8s ease forwards';
+            entry.target.style.opacity = '1';
+        }
+    });
+}, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+});
+
+// Elements to animate on scroll
+const animateOnScroll = document.querySelectorAll('.feature-card, .use-case-card, .step-3d, .stat-box');
+animateOnScroll.forEach(el => {
+    el.style.opacity = '0';
+    scrollAnimationObserver.observe(el);
+});
+
+// ============================================
+// 3D TILT EFFECT ON CARDS
+// ============================================
+
+function addTiltEffect(elements) {
+    elements.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+
+            card.style.transform = \`perspective(1000px) rotateX(\${rotateX}deg) rotateY(\${rotateY}deg) scale(1.05)\`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+        });
+    });
+}
+
+// Apply tilt effect to cards
+const tiltCards = document.querySelectorAll('.card-3d, .use-case-card, .step-3d');
+addTiltEffect(tiltCards);
+
+// ============================================
+// CONTACT FORM SUBMISSION
+// ============================================
+
 const contactForm = document.getElementById('contactForm');
 
 if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        submitBtn.disabled = true;
 
         const formData = {
             name: document.getElementById('name').value,
@@ -77,229 +175,63 @@ if (contactForm) {
                 showNotification('Message sent successfully!', 'success');
                 contactForm.reset();
             } else {
-                showNotification('Failed to send message. Please try again.', 'error');
+                showNotification('Failed to send message.', 'error');
             }
         } catch (error) {
             console.error('Error:', error);
-            showNotification('An error occurred. Please try again later.', 'error');
+            showNotification('An error occurred.', 'error');
+        } finally {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
         }
     });
 }
 
-// Notification System
+// ============================================
+// NOTIFICATION SYSTEM
+// ============================================
+
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-
-    // Add styles
-    notification.style.cssText = `
+    notification.style.cssText = \`
         position: fixed;
         top: 20px;
         right: 20px;
         padding: 1rem 1.5rem;
-        border-radius: 8px;
-        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        border-radius: 12px;
+        background: \${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
         color: white;
         font-weight: 600;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         z-index: 10000;
         animation: slideIn 0.3s ease;
-    `;
+    \`;
+    notification.textContent = message;
 
     document.body.appendChild(notification);
 
-    // Remove after 3 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => {
-            document.body.removeChild(notification);
+            if (notification.parentNode) {
+                document.body.removeChild(notification);
+            }
         }, 300);
     }, 3000);
 }
 
-// Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
+// ============================================
+// SCROLL TO TOP BUTTON
+// ============================================
 
-    @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-
-    .nav-menu.active {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        padding: 1rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-    }
-
-    .hamburger.active span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -6px);
-    }
-`;
-document.head.appendChild(style);
-
-// Intersection Observer for Animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
-            observer.unobserve(entry.target);
-        }
-    });
-}, observerOptions);
-
-// Observe elements for animation
-document.querySelectorAll('.feature-card, .step-card, .use-case-layout').forEach(el => {
-    el.style.opacity = '0';
-    observer.observe(el);
-});
-
-// Add fadeInUp animation
-const animationStyle = document.createElement('style');
-animationStyle.textContent = `
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-`;
-document.head.appendChild(animationStyle);
-
-// Workflow Data Loading (if on workflows page)
-async function loadWorkflows() {
-    try {
-        const response = await fetch('/api/workflows');
-        const workflows = await response.json();
-        displayWorkflows(workflows);
-    } catch (error) {
-        console.error('Error loading workflows:', error);
-    }
-}
-
-function displayWorkflows(workflows) {
-    const container = document.getElementById('workflows-container');
-    if (!container) return;
-
-    container.innerHTML = workflows.map(workflow => `
-        <div class="workflow-card">
-            <div class="workflow-header">
-                <h3>${workflow.title}</h3>
-                <span class="complexity-badge complexity-${workflow.complexity.toLowerCase()}">${workflow.complexity}</span>
-            </div>
-            <p>${workflow.description}</p>
-            <div class="workflow-footer">
-                <span class="category"><i class="fas fa-tag"></i> ${workflow.category}</span>
-                <span class="time"><i class="fas fa-clock"></i> ${workflow.estimatedTime}</span>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Guide Data Loading
-async function loadGuide() {
-    try {
-        const response = await fetch('/api/guide');
-        const guide = await response.json();
-        displayGuide(guide);
-    } catch (error) {
-        console.error('Error loading guide:', error);
-    }
-}
-
-function displayGuide(guide) {
-    const container = document.getElementById('guide-container');
-    if (!container) return;
-
-    container.innerHTML = guide.steps.map(step => `
-        <div class="guide-step">
-            <div class="guide-step-number">${step.step}</div>
-            <h3>${step.title}</h3>
-            <p>${step.description}</p>
-            ${step.commands ? `
-                <div class="commands">
-                    ${step.commands.map(cmd => `<code>${cmd}</code>`).join('')}
-                </div>
-            ` : ''}
-            ${step.tips ? `
-                <ul class="tips">
-                    ${step.tips.map(tip => `<li>${tip}</li>`).join('')}
-                </ul>
-            ` : ''}
-            ${step.requirements ? `
-                <ul class="requirements">
-                    ${step.requirements.map(req => `<li>${req}</li>`).join('')}
-                </ul>
-            ` : ''}
-            ${step.checklist ? `
-                <ul class="checklist">
-                    ${step.checklist.map(item => `<li><input type="checkbox"> ${item}</li>`).join('')}
-                </ul>
-            ` : ''}
-        </div>
-    `).join('');
-}
-
-// Load data when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('workflows-container')) {
-        loadWorkflows();
-    }
-    if (document.getElementById('guide-container')) {
-        loadGuide();
-    }
-});
-
-// Scroll to top button
 const scrollToTopBtn = document.createElement('button');
 scrollToTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
-scrollToTopBtn.className = 'scroll-to-top';
-scrollToTopBtn.style.cssText = `
+scrollToTopBtn.style.cssText = \`
     position: fixed;
     bottom: 30px;
     right: 30px;
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     color: white;
@@ -309,10 +241,10 @@ scrollToTopBtn.style.cssText = `
     align-items: center;
     justify-content: center;
     font-size: 1.25rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
     transition: all 0.3s ease;
     z-index: 1000;
-`;
+\`;
 
 document.body.appendChild(scrollToTopBtn);
 
@@ -332,11 +264,11 @@ scrollToTopBtn.addEventListener('click', () => {
 });
 
 scrollToTopBtn.addEventListener('mouseenter', () => {
-    scrollToTopBtn.style.transform = 'translateY(-5px)';
-    scrollToTopBtn.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+    scrollToTopBtn.style.transform = 'scale(1.15)';
 });
 
 scrollToTopBtn.addEventListener('mouseleave', () => {
-    scrollToTopBtn.style.transform = 'translateY(0)';
-    scrollToTopBtn.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+    scrollToTopBtn.style.transform = 'scale(1)';
 });
+
+console.log('✨ AI Automation - Ready! Designed by ASAD ALI NAUL');
