@@ -1,0 +1,300 @@
+{
+  "name": "Lead Qualification System",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-lead",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook - New Lead",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "lead-webhook"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.clearbit.com/v2/companies/find?domain={{ $json.company_domain }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "name": "Enrich Company Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [500, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "6",
+          "name": "Clearbit API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a sales qualification AI. Analyze this lead and provide:\n1. Lead Score (0-100)\n2. Company Fit (poor/good/excellent)\n3. Buying Intent (low/medium/high)\n4. Recommended Action\n5. Key talking points for sales team\n\nConsider: company size, industry, role of contact, and provided information."
+            },
+            {
+              "role": "user",
+              "content": "=Lead Information:\nName: {{ $json.name }}\nEmail: {{ $json.email }}\nCompany: {{ $json.company }}\nRole: {{ $json.role }}\nCompany Size: {{ $json.company_size }}\nIndustry: {{ $json.industry }}\nMessage: {{ $json.message }}"
+            }
+          ]
+        }
+      },
+      "name": "AI Lead Scoring",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [750, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "2",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.lead_score }}",
+              "operation": "largerEqual",
+              "value2": 70
+            }
+          ]
+        }
+      },
+      "name": "Is Hot Lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "resource": "contact",
+        "operation": "create",
+        "email": "={{ $json.email }}",
+        "additionalFields": {
+          "firstname": "={{ $json.name.split(' ')[0] }}",
+          "lastname": "={{ $json.name.split(' ').slice(1).join(' ') }}",
+          "company": "={{ $json.company }}",
+          "jobtitle": "={{ $json.role }}",
+          "lead_score": "={{ $json.lead_score }}",
+          "lead_status": "hot"
+        }
+      },
+      "name": "Add to CRM - Hot",
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 1,
+      "position": [1250, 200],
+      "credentials": {
+        "hubspotApi": {
+          "id": "7",
+          "name": "HubSpot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "contact",
+        "operation": "create",
+        "email": "={{ $json.email }}",
+        "additionalFields": {
+          "firstname": "={{ $json.name.split(' ')[0] }}",
+          "lastname": "={{ $json.name.split(' ').slice(1).join(' ') }}",
+          "company": "={{ $json.company }}",
+          "jobtitle": "={{ $json.role }}",
+          "lead_score": "={{ $json.lead_score }}",
+          "lead_status": "nurture"
+        }
+      },
+      "name": "Add to CRM - Nurture",
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 1,
+      "position": [1250, 400],
+      "credentials": {
+        "hubspotApi": {
+          "id": "7",
+          "name": "HubSpot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "sales-team",
+        "text": "=🔥 HOT LEAD ALERT!\n\nName: {{ $json.name }}\nCompany: {{ $json.company }} ({{ $json.company_size }} employees)\nRole: {{ $json.role }}\nScore: {{ $json.lead_score }}/100\n\nAI Analysis:\n{{ $json.ai_analysis }}\n\nRecommended Action: {{ $json.recommended_action }}\n\nTalking Points:\n{{ $json.talking_points }}"
+      },
+      "name": "Alert Sales Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1500, 100],
+      "credentials": {
+        "slackApi": {
+          "id": "4",
+          "name": "Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Write a personalized follow-up email to this lead. Be professional, acknowledge their interest, and suggest a discovery call. Keep it concise (3-4 paragraphs)."
+            },
+            {
+              "role": "user",
+              "content": "=Lead: {{ $json.name }} from {{ $json.company }}\nRole: {{ $json.role }}\nTheir message: {{ $json.message }}\nLead Score: {{ $json.lead_score }}"
+            }
+          ]
+        }
+      },
+      "name": "Generate Follow-up Email",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [1500, 200]
+    },
+    {
+      "parameters": {
+        "fromEmail": "sales@yourcompany.com",
+        "toEmail": "={{ $json.email }}",
+        "subject": "=Great to connect, {{ $json.name.split(' ')[0] }}!",
+        "text": "={{ $json.generated_email }}\n\nBest regards,\nSales Team"
+      },
+      "name": "Send Personalized Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1750, 200],
+      "credentials": {
+        "smtp": {
+          "id": "3",
+          "name": "SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"message\": \"Lead received and processed\", \"lead_score\": $json.lead_score } }}"
+      },
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2000, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - New Lead": {
+      "main": [
+        [
+          {
+            "node": "Enrich Company Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enrich Company Data": {
+      "main": [
+        [
+          {
+            "node": "AI Lead Scoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Lead Scoring": {
+      "main": [
+        [
+          {
+            "node": "Is Hot Lead?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Hot Lead?": {
+      "main": [
+        [
+          {
+            "node": "Add to CRM - Hot",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add to CRM - Nurture",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to CRM - Hot": {
+      "main": [
+        [
+          {
+            "node": "Alert Sales Team",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Follow-up Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Follow-up Email": {
+      "main": [
+        [
+          {
+            "node": "Send Personalized Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Personalized Email": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to CRM - Nurture": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "name": "Document Data Extraction",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "upload-document",
+        "options": {
+          "binaryData": true
+        }
+      },
+      "name": "Webhook - Upload Document",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "doc-upload"
+    },
+    {
+      "parameters": {
+        "operation": "extractText",
+        "binaryPropertyName": "data"
+      },
+      "name": "Extract Text (OCR)",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a document analysis AI. Extract and structure the following information from this document:\n1. Document Type (invoice, receipt, contract, report, etc.)\n2. Date\n3. Company/Vendor name\n4. Total amount (if applicable)\n5. Key line items or details\n6. Any important dates or deadlines\n7. Action items or requirements\n\nReturn the data in JSON format."
+            },
+            {
+              "role": "user",
+              "content": "=Document Text:\n{{ $json.text }}"
+            }
+          ]
+        }
+      },
+      "name": "AI Extract Data",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [750, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "2",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.document_type }}",
+              "operation": "equals",
+              "value2": "invoice"
+            }
+          ]
+        }
+      },
+      "name": "Is Invoice?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "table": "invoices",
+        "columns": "vendor_name, invoice_date, invoice_number, total_amount, line_items, status, document_url, extracted_at",
+        "values": "={{ $json.vendor_name }}, {{ $json.date }}, {{ $json.invoice_number }}, {{ $json.total_amount }}, {{ $json.line_items }}, pending_review, {{ $json.document_url }}, {{ $now }}"
+      },
+      "name": "Save Invoice to DB",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1250, 200],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "table": "documents",
+        "columns": "document_type, extracted_data, original_filename, processed_at, status",
+        "values": "={{ $json.document_type }}, {{ $json.extracted_data }}, {{ $json.filename }}, {{ $now }}, processed"
+      },
+      "name": "Save to General Docs",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1250, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.total_amount }}",
+              "operation": "larger",
+              "value2": 10000
+            }
+          ]
+        }
+      },
+      "name": "Amount > $10k?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1500, 200]
+    },
+    {
+      "parameters": {
+        "channel": "finance-approvals",
+        "text": "=💰 Large Invoice Detected!\n\nVendor: {{ $json.vendor_name }}\nAmount: ${{ $json.total_amount }}\nDate: {{ $json.invoice_date }}\nInvoice #: {{ $json.invoice_number }}\n\nRequires approval before payment.\nReview here: [Dashboard Link]"
+      },
+      "name": "Alert Finance Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1750, 100],
+      "credentials": {
+        "slackApi": {
+          "id": "4",
+          "name": "Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "accounting@yourcompany.com",
+        "toEmail": "={{ $json.vendor_email }}",
+        "subject": "Invoice Received - {{ $json.invoice_number }}",
+        "text": "=Dear {{ $json.vendor_name }},\n\nWe have received your invoice #{{ $json.invoice_number }} for ${{ $json.total_amount }}.\n\nOur team is reviewing it and payment will be processed according to our terms.\n\nThank you,\nAccounting Team"
+      },
+      "name": "Send Confirmation",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1750, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"document_type\": $json.document_type, \"extracted_fields\": $json.extracted_data } }}"
+      },
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2000, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Upload Document": {
+      "main": [
+        [
+          {
+            "node": "Extract Text (OCR)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Text (OCR)": {
+      "main": [
+        [
+          {
+            "node": "AI Extract Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Extract Data": {
+      "main": [
+        [
+          {
+            "node": "Is Invoice?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Invoice?": {
+      "main": [
+        [
+          {
+            "node": "Save Invoice to DB",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Save to General Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Invoice to DB": {
+      "main": [
+        [
+          {
+            "node": "Amount > $10k?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Amount > $10k?": {
+      "main": [
+        [
+          {
+            "node": "Alert Finance Team",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Confirmation": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to General Docs": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

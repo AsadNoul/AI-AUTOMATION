@@ -1,0 +1,268 @@
+{
+  "name": "Meeting Transcription & Summary",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "meeting-upload",
+        "options": {
+          "binaryData": true
+        }
+      },
+      "name": "Upload Meeting Recording",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "meeting-upload"
+    },
+    {
+      "parameters": {
+        "operation": "transcribe",
+        "binaryPropertyName": "data",
+        "model": "whisper-1",
+        "options": {
+          "language": "en"
+        }
+      },
+      "name": "Transcribe Audio",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "2",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a meeting assistant. Analyze this meeting transcript and provide:\n\n1. Executive Summary (2-3 sentences)\n2. Key Discussion Points (bulleted list)\n3. Decisions Made (bulleted list)\n4. Action Items (with assigned person if mentioned)\n5. Follow-up Questions or Next Steps\n\nFormat the output in clear markdown."
+            },
+            {
+              "role": "user",
+              "content": "=Meeting Transcript:\n{{ $json.transcription }}\n\nMeeting Details:\nTitle: {{ $json.meeting_title }}\nDate: {{ $json.meeting_date }}\nParticipants: {{ $json.participants }}"
+            }
+          ]
+        }
+      },
+      "name": "Generate Summary",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Extract all action items from this meeting summary. For each action item, identify:\n- Task description\n- Assigned to (person's name or email)\n- Deadline (if mentioned)\n- Priority (high/medium/low based on context)\n\nReturn as a JSON array."
+            },
+            {
+              "role": "user",
+              "content": "=Meeting Summary:\n{{ $json.summary }}\n\nTranscript:\n{{ $json.transcription }}"
+            }
+          ]
+        }
+      },
+      "name": "Extract Action Items",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "workspaceId": "={{ $json.notion_workspace_id }}",
+        "title": "={{ $json.meeting_title }} - {{ $json.meeting_date }}",
+        "pageProperties": {
+          "Meeting Date": "={{ $json.meeting_date }}",
+          "Participants": "={{ $json.participants }}",
+          "Duration": "={{ $json.duration }}",
+          "Status": "Completed"
+        },
+        "content": "=## Executive Summary\n{{ $json.executive_summary }}\n\n## Full Transcript\n{{ $json.transcription }}\n\n## Key Points\n{{ $json.key_points }}\n\n## Decisions Made\n{{ $json.decisions }}\n\n## Action Items\n{{ $json.action_items }}"
+      },
+      "name": "Save to Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [1250, 200],
+      "credentials": {
+        "notionApi": {
+          "id": "12",
+          "name": "Notion"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "meetings@yourcompany.com",
+        "toEmail": "={{ $json.participants }}",
+        "subject": "=Meeting Summary: {{ $json.meeting_title }}",
+        "emailFormat": "html",
+        "html": "=<h2>Meeting Summary</h2>\n<p><strong>Date:</strong> {{ $json.meeting_date }}</p>\n<p><strong>Participants:</strong> {{ $json.participants }}</p>\n\n<h3>Executive Summary</h3>\n<p>{{ $json.executive_summary }}</p>\n\n<h3>Key Discussion Points</h3>\n{{ $json.key_points }}\n\n<h3>Decisions Made</h3>\n{{ $json.decisions }}\n\n<h3>Action Items</h3>\n{{ $json.action_items }}\n\n<p><a href=\"{{ $json.notion_url }}\">View Full Notes in Notion</a></p>\n\n<p>Best regards,<br>Meeting Assistant</p>"
+      },
+      "name": "Email Summary to Participants",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1500, 300],
+      "credentials": {
+        "smtp": {
+          "id": "3",
+          "name": "SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "table": "meetings",
+        "columns": "title, date, participants, duration, transcription, summary, action_items, notion_url, created_at",
+        "values": "={{ $json.meeting_title }}, {{ $json.meeting_date }}, {{ $json.participants }}, {{ $json.duration }}, {{ $json.transcription }}, {{ $json.summary }}, {{ $json.action_items }}, {{ $json.notion_url }}, {{ $now }}"
+      },
+      "name": "Save to Database",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1250, 400],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "projectId": "{{ $json.asana_project_id }}",
+        "name": "={{ $json.task_description }}",
+        "additionalFields": {
+          "assignee": "={{ $json.assigned_to }}",
+          "due_on": "={{ $json.deadline }}",
+          "notes": "=From meeting: {{ $json.meeting_title }}\n{{ $json.meeting_date }}",
+          "priority": "={{ $json.priority }}"
+        }
+      },
+      "name": "Create Tasks in Asana",
+      "type": "n8n-nodes-base.asana",
+      "typeVersion": 1,
+      "position": [1500, 400],
+      "credentials": {
+        "asanaApi": {
+          "id": "13",
+          "name": "Asana"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"meeting_id\": $json.meeting_id, \"summary_sent\": true, \"tasks_created\": $json.tasks_count } }}"
+      },
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1750, 300]
+    }
+  ],
+  "connections": {
+    "Upload Meeting Recording": {
+      "main": [
+        [
+          {
+            "node": "Transcribe Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe Audio": {
+      "main": [
+        [
+          {
+            "node": "Generate Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Summary": {
+      "main": [
+        [
+          {
+            "node": "Extract Action Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Action Items": {
+      "main": [
+        [
+          {
+            "node": "Save to Notion",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save to Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Notion": {
+      "main": [
+        [
+          {
+            "node": "Email Summary to Participants",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Database": {
+      "main": [
+        [
+          {
+            "node": "Create Tasks in Asana",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Summary to Participants": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Tasks in Asana": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

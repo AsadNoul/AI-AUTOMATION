@@ -1,0 +1,252 @@
+{
+  "name": "AI-Powered Email Marketing",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 1,
+              "triggerAtDay": 1,
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "name": "Weekly Campaign Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "table": "email_subscribers",
+        "select": "email, name, company, industry, last_engagement, preferences"
+      },
+      "name": "Get Subscriber List",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [500, 300],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an email marketing expert. Generate 3 subject line variations for our weekly newsletter. Make them:\n1. Attention-grabbing\n2. Personalized when possible\n3. Clear about the value\n4. Under 60 characters\n\nAlso suggest which subject line would work best for different subscriber segments."
+            },
+            {
+              "role": "user",
+              "content": "=This week's newsletter topic: {{ $json.newsletter_topic }}\nTarget audience: {{ $json.audience_segment }}"
+            }
+          ]
+        }
+      },
+      "name": "Generate Subject Lines",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Create a personalized email for this subscriber. Include:\n- Personalized greeting using their name\n- Content tailored to their industry/preferences\n- Clear call-to-action\n- Professional but friendly tone\n- 3-4 paragraphs maximum\n\nUse HTML formatting for better readability."
+            },
+            {
+              "role": "user",
+              "content": "=Subscriber: {{ $json.name }} from {{ $json.company }}\nIndustry: {{ $json.industry }}\nPreferences: {{ $json.preferences }}\nNewsletter Topic: {{ $json.topic }}"
+            }
+          ]
+        }
+      },
+      "name": "Personalize Email Content",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.engagement_score }}",
+              "operation": "largerEqual",
+              "value2": "high"
+            }
+          ]
+        }
+      },
+      "name": "Segment by Engagement",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "service": "gmail",
+        "fromEmail": "newsletter@yourcompany.com",
+        "toEmail": "={{ $json.email }}",
+        "subject": "={{ $json.subject_line_a }}",
+        "emailFormat": "html",
+        "html": "={{ $json.personalized_content }}",
+        "options": {}
+      },
+      "name": "Send - Subject A",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1500, 200],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "10",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "service": "gmail",
+        "fromEmail": "newsletter@yourcompany.com",
+        "toEmail": "={{ $json.email }}",
+        "subject": "={{ $json.subject_line_b }}",
+        "emailFormat": "html",
+        "html": "={{ $json.personalized_content }}",
+        "options": {}
+      },
+      "name": "Send - Subject B",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1500, 400]
+    },
+    {
+      "parameters": {
+        "table": "email_campaigns",
+        "columns": "subscriber_email, subject_line, content, sent_at, campaign_id, segment",
+        "values": "={{ $json.email }}, {{ $json.subject_line }}, {{ $json.content }}, {{ $now }}, {{ $json.campaign_id }}, {{ $json.segment }}"
+      },
+      "name": "Log Campaign Send",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1750, 300]
+    },
+    {
+      "parameters": {
+        "channel": "marketing",
+        "text": "=📧 Weekly Email Campaign Sent!\n\nTotal Sent: {{ $json.total_sent }}\nSubject A: {{ $json.sent_subject_a }}\nSubject B: {{ $json.sent_subject_b }}\n\nCheck analytics in 24 hours for open rates."
+      },
+      "name": "Notify Marketing Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [2000, 300]
+    }
+  ],
+  "connections": {
+    "Weekly Campaign Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Subscriber List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Subscriber List": {
+      "main": [
+        [
+          {
+            "node": "Generate Subject Lines",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Subject Lines": {
+      "main": [
+        [
+          {
+            "node": "Personalize Email Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personalize Email Content": {
+      "main": [
+        [
+          {
+            "node": "Segment by Engagement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Segment by Engagement": {
+      "main": [
+        [
+          {
+            "node": "Send - Subject A",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send - Subject B",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send - Subject A": {
+      "main": [
+        [
+          {
+            "node": "Log Campaign Send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send - Subject B": {
+      "main": [
+        [
+          {
+            "node": "Log Campaign Send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Campaign Send": {
+      "main": [
+        [
+          {
+            "node": "Notify Marketing Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

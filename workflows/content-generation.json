@@ -1,0 +1,290 @@
+{
+  "name": "Content Generation Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "name": "Daily Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://newsapi.org/v2/top-headlines?category=technology&apiKey=YOUR_API_KEY",
+        "options": {}
+      },
+      "name": "Fetch Trending Topics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an expert content strategist. Based on these trending topics, suggest 3 blog post ideas that would be valuable for our audience. For each idea provide: Title, Brief description, Target keywords, and Why it's timely."
+            },
+            {
+              "role": "user",
+              "content": "=Trending Topics:\n{{ $json.articles.map(a => a.title).join('\\n') }}"
+            }
+          ]
+        }
+      },
+      "name": "Generate Topic Ideas",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [750, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "2",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a professional blog writer. Write a comprehensive, SEO-optimized blog post (1000-1500 words) on the given topic. Include:\n- Engaging introduction\n- Well-structured sections with H2 and H3 headings\n- Practical examples and insights\n- Clear conclusion with call-to-action\n- Meta description (150-160 characters)"
+            },
+            {
+              "role": "user",
+              "content": "=Topic: {{ $json.blog_title }}\nKeywords: {{ $json.keywords }}\nKey Points: {{ $json.key_points }}"
+            }
+          ]
+        }
+      },
+      "name": "Write Blog Post",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Create social media posts to promote this blog article. Generate:\n1. LinkedIn post (professional, 2-3 paragraphs)\n2. Twitter thread (3-4 tweets)\n3. Facebook post (engaging, conversational)\n4. Instagram caption (with emojis and hashtags)\n\nEach should include the blog link placeholder and relevant hashtags."
+            },
+            {
+              "role": "user",
+              "content": "=Blog Title: {{ $json.title }}\nSummary: {{ $json.summary }}"
+            }
+          ]
+        }
+      },
+      "name": "Generate Social Posts",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "postType": "post",
+        "title": "={{ $json.title }}",
+        "content": "={{ $json.blog_content }}",
+        "additionalFields": {
+          "status": "draft",
+          "excerpt": "={{ $json.meta_description }}",
+          "tags": "={{ $json.tags }}",
+          "categories": "={{ $json.categories }}"
+        }
+      },
+      "name": "Create WordPress Draft",
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [1500, 200],
+      "credentials": {
+        "wordpressApi": {
+          "id": "8",
+          "name": "WordPress"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "base": "appXXXXXX",
+        "table": "Social Media Queue",
+        "columns": "platform, post_content, blog_link, status, scheduled_date",
+        "values": "=LinkedIn, {{ $json.linkedin_post }}, {{ $json.blog_url }}, scheduled, {{ $now.plus({ days: 1 }) }}"
+      },
+      "name": "Queue LinkedIn Post",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [1500, 300],
+      "credentials": {
+        "airtableApi": {
+          "id": "9",
+          "name": "Airtable"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "base": "appXXXXXX",
+        "table": "Social Media Queue",
+        "columns": "platform, post_content, blog_link, status, scheduled_date",
+        "values": "=Twitter, {{ $json.twitter_thread }}, {{ $json.blog_url }}, scheduled, {{ $now.plus({ days: 1, hours: 2 }) }}"
+      },
+      "name": "Queue Twitter Thread",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [1500, 400]
+    },
+    {
+      "parameters": {
+        "channel": "content-team",
+        "text": "=📝 New Blog Post Created!\n\nTitle: {{ $json.title }}\nStatus: Draft\nWord Count: {{ $json.word_count }}\n\nSocial posts queued for:\n✅ LinkedIn\n✅ Twitter\n✅ Facebook\n✅ Instagram\n\nReview and publish: {{ $json.wordpress_url }}"
+      },
+      "name": "Notify Content Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1750, 300],
+      "credentials": {
+        "slackApi": {
+          "id": "4",
+          "name": "Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "table": "content_calendar",
+        "columns": "title, content, meta_description, keywords, status, social_posts, created_at, wordpress_id",
+        "values": "={{ $json.title }}, {{ $json.blog_content }}, {{ $json.meta_description }}, {{ $json.keywords }}, draft, {{ $json.social_posts }}, {{ $now }}, {{ $json.wordpress_id }}"
+      },
+      "name": "Save to Database",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [2000, 300],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "PostgreSQL"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Daily Schedule": {
+      "main": [
+        [
+          {
+            "node": "Fetch Trending Topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Trending Topics": {
+      "main": [
+        [
+          {
+            "node": "Generate Topic Ideas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Topic Ideas": {
+      "main": [
+        [
+          {
+            "node": "Write Blog Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Blog Post": {
+      "main": [
+        [
+          {
+            "node": "Generate Social Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Social Posts": {
+      "main": [
+        [
+          {
+            "node": "Create WordPress Draft",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Queue LinkedIn Post",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Queue Twitter Thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create WordPress Draft": {
+      "main": [
+        [
+          {
+            "node": "Notify Content Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue LinkedIn Post": {
+      "main": [
+        [
+          {
+            "node": "Notify Content Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Content Team": {
+      "main": [
+        [
+          {
+            "node": "Save to Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "name": "Customer Support Automation",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "When Email Received",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "id": "email-trigger",
+      "credentials": {
+        "imap": {
+          "id": "1",
+          "name": "Gmail IMAP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "name": "Check Every Minute",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 500]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a helpful customer support assistant. Analyze the customer's email and provide: 1) Sentiment (positive/neutral/negative) 2) Urgency level (low/medium/high) 3) Category (technical/billing/general) 4) A professional response suggestion."
+            },
+            {
+              "role": "user",
+              "content": "=Customer Email:\nFrom: {{ $json.from }}\nSubject: {{ $json.subject }}\nMessage: {{ $json.text }}"
+            }
+          ]
+        }
+      },
+      "name": "Analyze with AI",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "2",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.sentiment }}",
+              "operation": "equals",
+              "value2": "negative"
+            }
+          ],
+          "number": [
+            {
+              "value1": "={{ $json.urgency }}",
+              "operation": "equals",
+              "value2": "high"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "Check if Urgent",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "support@yourcompany.com",
+        "toEmail": "={{ $json.from }}",
+        "subject": "=Re: {{ $json.subject }}",
+        "text": "={{ $json.suggestedResponse }}\n\nBest regards,\nSupport Team"
+      },
+      "name": "Send Auto Response",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1000, 400],
+      "credentials": {
+        "smtp": {
+          "id": "3",
+          "name": "SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "support-urgent",
+        "text": "=🚨 Urgent Support Ticket\n\nFrom: {{ $json.from }}\nSubject: {{ $json.subject }}\nSentiment: {{ $json.sentiment }}\nUrgency: {{ $json.urgency }}\n\nMessage: {{ $json.text }}",
+        "otherOptions": {}
+      },
+      "name": "Alert Team on Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1000, 200],
+      "credentials": {
+        "slackApi": {
+          "id": "4",
+          "name": "Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "table": "support_tickets",
+        "columns": "customer_email, subject, message, sentiment, urgency, category, ai_response, status, created_at",
+        "values": "={{ $json.from }}, {{ $json.subject }}, {{ $json.text }}, {{ $json.sentiment }}, {{ $json.urgency }}, {{ $json.category }}, {{ $json.suggestedResponse }}, pending, {{ $now }}"
+      },
+      "name": "Save to Database",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1250, 300],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "PostgreSQL"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Email Received": {
+      "main": [
+        [
+          {
+            "node": "Analyze with AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze with AI": {
+      "main": [
+        [
+          {
+            "node": "Check if Urgent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Urgent": {
+      "main": [
+        [
+          {
+            "node": "Alert Team on Slack",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Auto Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Auto Response": {
+      "main": [
+        [
+          {
+            "node": "Save to Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alert Team on Slack": {
+      "main": [
+        [
+          {
+            "node": "Save to Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2024-10-22T00:00:00.000Z",
+  "versionId": "1"
+}
